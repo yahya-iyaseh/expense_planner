@@ -6,6 +6,7 @@ import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
   final List<Transaction> recentTransactions;
+  var total = 0.0;
   Chart(this.recentTransactions);
 
   List<Map<String, Object>> get groupedTrnasactionValues {
@@ -21,6 +22,7 @@ class Chart extends StatelessWidget {
           totalSum += tx.amount;
         }
       }
+      total += totalSum;
       print(DateFormat.E().format(weekDay));
       print(totalSum);
       return {'day': DateFormat.E().format(weekDay), 'amount': totalSum};
@@ -39,7 +41,11 @@ class Chart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ...groupedTrnasactionValues.map((e) {
-              return ChartBar(e['day'] as String, e['amount'] as double, 0.0);
+              return ChartBar(
+                e['day'] as String,
+                e['amount'] as double,
+                (e['amount'] as double) / total,
+              );
             })
           ],
         ),
