@@ -25,16 +25,16 @@ class _UserTransactionsState extends State<UserTransactions> {
     ),
   ];
 
-  void _addNewTransaction(String txTitle, String txAmount) {
+  void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
       title: txTitle,
-      amount: double.tryParse(txAmount) ?? 0,
+      amount: txAmount,
       date: DateTime.now(),
       id: DateTime.now().toString(),
     );
     // Future.delayed(Duration.zero, () {
       setState(() {
-        _userTransActions.add(newTx);
+        _userTransActions.insert(0, newTx);
       });
     // });
   }
@@ -43,8 +43,9 @@ class _UserTransactionsState extends State<UserTransactions> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+       
+        
         NewTransaction(_addNewTransaction),
-        TransactionList(_userTransActions),
       ],
     );
   }

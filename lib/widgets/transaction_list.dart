@@ -9,8 +9,9 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: _userTransActions.map((tx) {
+      height: 300,
+      child: ListView.builder(
+        itemBuilder: (xtc, index) {
           return Card(
             child: Row(
               children: [
@@ -22,16 +23,16 @@ class TransactionList extends StatelessWidget {
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.purple,
+                      color: Theme.of(context).primaryColor,
                       width: 2,
                     ),
                   ),
                   child: Text(
-                    '\$${tx.amount}',
+                    '\$${_userTransActions[index].amount.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Colors.purple,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -39,14 +40,13 @@ class TransactionList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tx.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                      _userTransActions[index].title,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     Text(
-                      DateFormat.yMd().add_jm().format(tx.date),
+                      DateFormat.yMd()
+                          .add_jm()
+                          .format(_userTransActions[index].date),
                       style: TextStyle(
                         fontWeight: FontWeight.w300,
                         fontSize: 15,
@@ -58,7 +58,8 @@ class TransactionList extends StatelessWidget {
               ],
             ),
           );
-        }).toList(),
+        },
+        itemCount: _userTransActions.length,
       ),
     );
   }
