@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../widgets/chart_bar.dart';
 import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
@@ -37,22 +39,7 @@ class Chart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ...groupedTrnasactionValues.map((e) {
-              return Column(
-                children: [
-                  Text(
-                    (e['amount'] as double).toStringAsFixed(2),
-                  ),
-                  Container(
-                    height: 50,
-                  ),
-                  Container(
-                    height: 10,
-                  ),
-                  Text(
-                    e['day'] as String,
-                  ),
-                ],
-              );
+              return ChartBar(e['day'] as String, e['amount'] as double, 0.0);
             })
           ],
         ),

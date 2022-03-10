@@ -1,10 +1,47 @@
 import 'package:flutter/material.dart';
 
 class ChartBar extends StatelessWidget {
-  const ChartBar({Key? key}) : super(key: key);
+  final String label;
+  final double totalSpendAmount;
+  final double totalPercentage;
+  ChartBar(this.label, this.totalSpendAmount, this.totalPercentage);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: [
+        Text(
+          (totalSpendAmount as double).toStringAsFixed(2),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 60,
+          width: 10,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(220, 243, 243, 150),
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              Container(),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          label as String,
+        ),
+      ],
+    );
   }
 }

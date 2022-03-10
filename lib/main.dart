@@ -117,7 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: double.infinity,
                 margin: EdgeInsets.all(10),
                 child: Chart(_recentTransaction),
-                
               ),
               _userTransActions.isEmpty
                   ? Column(
