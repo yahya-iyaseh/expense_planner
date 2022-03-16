@@ -18,7 +18,7 @@ class _NewTransactionState extends State<NewTransaction> {
   void _addText() {
     final _title = _titleController.text;
     final _amount = _amountController.text;
-    if (_title.isEmpty || _amount.isEmpty) {
+    if (_title.isEmpty || _amount.isEmpty || _selectedDate == null) {
       return;
     }
     widget._addNewTransaction(
