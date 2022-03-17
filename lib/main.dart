@@ -113,47 +113,57 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text('Personal Expenses'),
+      actions: [
+        IconButton(
+          onPressed: () => _startAddNewTransaction(context),
+          icon: Icon(Icons.add),
+        ),
+      ],
+    );
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expenses'),
-        actions: [
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(Icons.add),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: Container(
         child: SingleChildScrollView(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    .4,
                 width: double.infinity,
-                margin: EdgeInsets.all(10),
+                // margin: EdgeInsets.all(10),
                 child: Chart(_recentTransaction),
               ),
-              _userTransActions.isEmpty
-                  ? Column(
-                      children: [
-                        Text(
-                          'No transactions added yet!',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          height: 200,
-                          child: Image.asset(
-                            'assets/images/waiting.png',
-                            fit: BoxFit.cover,
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    .6,
+                child: _userTransActions.isEmpty
+                    ? Column(
+                        children: [
+                          Text(
+                            'No transactions added yet!',
+                            style: Theme.of(context).textTheme.headline6,
                           ),
-                        ),
-                      ],
-                    )
-                  : TransactionList(_userTransActions, _deleteTransaction),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: 160,
+                            child: Image.asset(
+                              'assets/images/waiting.png',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
+                      )
+                    : TransactionList(_userTransActions, _deleteTransaction),
+              ),
             ],
           ),
         ),
