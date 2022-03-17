@@ -10,7 +10,6 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5),
-      height: 600,
       child: ListView.builder(
         itemBuilder: (xtc, index) {
           return Card(

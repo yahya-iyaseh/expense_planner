@@ -32,10 +32,13 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(groupedTrnasactionValues);
-    
+
     return Card(
       elevation: 6,
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(
+        vertical: 20,
+        horizontal: 8,
+      ),
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Row(

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './models/transaction.dart';
 import './widgets/chart.dart';
 import './widgets/transaction_list.dart';
 import './widgets/new_transaction.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -68,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //   date: DateTime.now(),
     // ),
   ];
+  bool _showChart = false;
   List<Transaction> get _recentTransaction {
     return _userTransActions.where((tx) {
       return tx.date.isAfter(
@@ -129,41 +138,62 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    .4,
-                width: double.infinity,
-                // margin: EdgeInsets.all(10),
-                child: Chart(_recentTransaction),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show Chart'),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (val) {
+                        setState(() {
+                          _showChart = val;
+                        });
+                      }),
+                ],
               ),
-              Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    .6,
-                child: _userTransActions.isEmpty
-                    ? Column(
-                        children: [
-                          Text(
-                            'No transactions added yet!',
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: 160,
-                            child: Image.asset(
-                              'assets/images/waiting.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ],
-                      )
-                    : TransactionList(_userTransActions, _deleteTransaction),
-              ),
+              _showChart == true
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          .6,
+                      width: double.infinity,
+                      // margin: EdgeInsets.all(10),
+                      child: Chart(_recentTransaction),
+                    )
+                  : Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          .7,
+                      child: _userTransActions.isEmpty
+                          ? LayoutBuilder(builder: (ctx, constraint) {
+                              return Column(
+                                children: [
+                                  Container(
+                                    height: constraint.maxHeight * .15,
+                                    child: Text(
+                                      'No transactions added yet!',
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: constraint.maxHeight * .02,
+                                  ),
+                                  Container(
+                                    height: constraint.maxHeight * .7,
+                                    child: Image.asset(
+                                      'assets/images/waiting.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            })
+                          : TransactionList(
+                              _userTransActions, _deleteTransaction),
+                    ),
             ],
           ),
         ),
