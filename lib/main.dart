@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -122,6 +124,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final _isLandscape = mediaQuery.orientation == Orientation.landscape;
     final appBar = AppBar(
       title: Text('Personal Expenses'),
       actions: [
@@ -131,6 +135,37 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
     );
+    final _theBody = Container(
+      height: (mediaQuery.size.height -
+              appBar.preferredSize.height -
+              mediaQuery.padding.top) *
+          .7,
+      child: _userTransActions.isEmpty
+          ? LayoutBuilder(builder: (ctx, constraint) {
+              return Column(
+                children: [
+                  Container(
+                    height: constraint.maxHeight * .15,
+                    child: Text(
+                      'No transactions added yet!',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ),
+                  SizedBox(
+                    height: constraint.maxHeight * .02,
+                  ),
+                  Container(
+                    height: constraint.maxHeight * .7,
+                    child: Image.asset(
+                      'assets/images/waiting.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              );
+            })
+          : TransactionList(_userTransActions, _deleteTransaction),
+    );
     return Scaffold(
       appBar: appBar,
       body: Container(
@@ -138,74 +173,58 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Show Chart'),
-                  Switch(
-                      value: _showChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showChart = val;
-                        });
-                      }),
-                ],
-              ),
-              _showChart == true
-                  ? Container(
-                      height: (MediaQuery.of(context).size.height -
-                              appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
-                          .6,
-                      width: double.infinity,
-                      // margin: EdgeInsets.all(10),
-                      child: Chart(_recentTransaction),
-                    )
-                  : Container(
-                      height: (MediaQuery.of(context).size.height -
-                              appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
-                          .7,
-                      child: _userTransActions.isEmpty
-                          ? LayoutBuilder(builder: (ctx, constraint) {
-                              return Column(
-                                children: [
-                                  Container(
-                                    height: constraint.maxHeight * .15,
-                                    child: Text(
-                                      'No transactions added yet!',
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: constraint.maxHeight * .02,
-                                  ),
-                                  Container(
-                                    height: constraint.maxHeight * .7,
-                                    child: Image.asset(
-                                      'assets/images/waiting.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            })
-                          : TransactionList(
-                              _userTransActions, _deleteTransaction),
-                    ),
+              if (_isLandscape)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Show Chart'),
+                    Switch.adaptive(
+                        activeColor: Theme.of(context).accentColor,
+                        value: _showChart,
+                        onChanged: (val) {
+                          setState(() {
+                            _showChart = val;
+                          });
+                        }),
+                  ],
+                ),
+              if (_isLandscape)
+                _showChart == true
+                    ? Container(
+                        height: (mediaQuery.size.height -
+                                appBar.preferredSize.height -
+                                mediaQuery.padding.top) *
+                            .6,
+                        width: double.infinity,
+                        // margin: EdgeInsets.all(10),
+                        child: Chart(_recentTransaction),
+                      )
+                    : _theBody,
+              if (!_isLandscape)
+                Container(
+                  height: (mediaQuery.size.height -
+                          appBar.preferredSize.height -
+                          mediaQuery.padding.top) *
+                      .3,
+                  width: double.infinity,
+                  // margin: EdgeInsets.all(10),
+                  child: Chart(_recentTransaction),
+                ),
+              if (!_isLandscape) _theBody,
             ],
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _startAddNewTransaction(context),
-        child: Icon(
-          Icons.add,
-          size: 30,
-        ),
-      ),
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              onPressed: () => _startAddNewTransaction(context),
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
+            ),
     );
   }
 }
