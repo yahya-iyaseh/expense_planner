@@ -24,14 +24,14 @@ class Chart extends StatelessWidget {
         }
       }
       total += totalSum;
-      print(total);
+      // print(total);
       return {'day': DateFormat.E().format(weekDay), 'amount': totalSum};
     }).reversed.toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(groupedTrnasactionValues);
+    // print(groupedTrnasactionValues);
 
     return Card(
       elevation: 6,

@@ -1,11 +1,33 @@
+import 'dart:math';
+
 import '../models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class TransactionList extends StatelessWidget {
+class TransactionList extends StatefulWidget {
   final List<Transaction> _userTransActions;
   final Function _deletTrans;
   TransactionList(this._userTransActions, this._deletTrans);
+
+  @override
+  State<TransactionList> createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
+  late Color _backColor;
+  @override
+  void initState() {
+    final List<dynamic> _avilableColors = [
+      Colors.blue,
+      Colors.black,
+      Colors.purple,
+      Colors.red,
+    ];
+    _backColor = _avilableColors[Random().nextInt(4)];
+    print(_backColor);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,11 +41,12 @@ class TransactionList extends StatelessWidget {
             ),
             child: ListTile(
               leading: CircleAvatar(
+                backgroundColor: _backColor,
                 radius: 30,
                 child: Container(
                   child: FittedBox(
                     child: Text(
-                      "\$${_userTransActions[index].amount}",
+                      "\$${widget._userTransActions[index].amount}",
                       style: Theme.of(context).textTheme.headline2,
                     ),
                   ),
@@ -31,15 +54,18 @@ class TransactionList extends StatelessWidget {
                 ),
               ),
               title: Text(
-                _userTransActions[index].title,
+                widget._userTransActions[index].title,
                 style: Theme.of(context).textTheme.headline6,
               ),
               subtitle: Text(
-                DateFormat.yMd().add_jm().format(_userTransActions[index].date),
+                DateFormat.yMd()
+                    .add_jm()
+                    .format(widget._userTransActions[index].date),
               ),
               trailing: MediaQuery.of(context).size.width > 460
                   ? FlatButton.icon(
-                      onPressed: () => _deletTrans(_userTransActions[index].id),
+                      onPressed: () => widget
+                          ._deletTrans(widget._userTransActions[index].id),
                       label: Text('Delete'),
                       icon: Icon(Icons.delete),
                       textColor: Theme.of(context).errorColor,
@@ -49,7 +75,8 @@ class TransactionList extends StatelessWidget {
                         Icons.delete,
                         color: Theme.of(context).errorColor,
                       ),
-                      onPressed: () => _deletTrans(_userTransActions[index].id),
+                      onPressed: () => widget
+                          ._deletTrans(widget._userTransActions[index].id),
                     ),
             ),
           );
@@ -100,7 +127,7 @@ class TransactionList extends StatelessWidget {
           //   ),
           // );
         },
-        itemCount: _userTransActions.length,
+        itemCount: widget._userTransActions.length,
       ),
     );
   }
